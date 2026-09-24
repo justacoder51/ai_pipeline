@@ -1,0 +1,9 @@
+{
+  "baseline_f1": 0.0,
+  "candidate_f1": 0.7222,
+  "margin": 0.1,
+  "gate_threshold": 0.1,
+  "gate_passed": true,
+  "n_train": 1279,
+  "n_val": 320
+}

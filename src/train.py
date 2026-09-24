@@ -8,10 +8,13 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import f1_score
 
 from data_loader import load_dataset, REQUIRED_FEATURES, TARGET
+from pathlib import Path
+# ...
 
 RANDOM_STATE = 42
 MARGIN = 0.10
-MODEL_DIR = "model"
+MODEL_DIR = Path(__file__).resolve().parent / "model"
+MODEL_DIR.mkdir(parents=True, exist_ok=True)
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 
@@ -54,7 +57,7 @@ def main():
     }
     print(json.dumps(metrics, indent=2))
 
-    with open(os.path.join(MODEL_DIR, "metrics.json"), "w") as f:
+    with open(MODEL_DIR / "metrics.json", "w") as f:
         json.dump(metrics, f, indent=2)
 
     if not passed:
@@ -62,8 +65,8 @@ def main():
               f"(candidate={candidate_score:.4f} < gate={gate:.4f})")
         sys.exit(1)
 
-    joblib.dump(candidate, os.path.join(MODEL_DIR, "model.joblib"))
-    print("Model saved to", os.path.join(MODEL_DIR, "model.joblib"))
+    joblib.dump(candidate, MODEL_DIR / "model.joblib")
+    print("Model saved to", MODEL_DIR / "model.joblib")
 
 
 if __name__ == "__main__":

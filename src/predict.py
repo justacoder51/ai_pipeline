@@ -1,25 +1,31 @@
-import pickle
-from pathlib import Path
+import sys
+import joblib
+import pandas as pd
 
-from sklearn.datasets import load_iris
+from data_loader import REQUIRED_FEATURES
+
+MODEL_PATH = "model/model.joblib"
 
 
-MODEL_PATH = Path(__file__).resolve().parent.parent / "models" / "iris_model.pkl"
+def load_model(path=MODEL_PATH):
+    """Load the trained model pipeline from disk."""
+    return joblib.load(path)
 
 
-def predict_sample(sample: list[float]) -> int:
-    """Predict the class for a single flower sample."""
-    if not MODEL_PATH.exists():
-        raise FileNotFoundError(f"Model not found at: {MODEL_PATH}")
+def predict(input_dict, model=None):
+    """Predict for a single sample given as a dict of feature -> value."""
+    if model is None:
+        model = load_model()
 
-    with MODEL_PATH.open("rb") as f:
-        model = pickle.load(f)
+    missing = [c for c in REQUIRED_FEATURES if c not in input_dict]
+    if missing:
+        raise ValueError(f"Missing required features: {missing}")
 
-    return int(model.predict([sample])[0])
+    X = pd.DataFrame([input_dict])[REQUIRED_FEATURES]
+    pred = model.predict(X)
+    return int(pred[0])
 
 
 if __name__ == "__main__":
-    iris = load_iris()
-    sample = iris.data[0].tolist()
-    prediction = predict_sample(sample)
-    print(f"Sample prediction: {prediction}")
+    sample = {c: 1.0 for c in REQUIRED_FEATURES}
+    print("Prediction:", predict(sample))

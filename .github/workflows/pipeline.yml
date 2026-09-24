@@ -1,0 +1,42 @@
+name: ML Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Load and validate dataset
+        working-directory: src
+        run: python data_loader.py
+
+      - name: Train, evaluate, apply quality gate
+        working-directory: src
+        run: python train.py
+
+      - name: Run application tests
+        run: pytest tests/ -v
+
+      - name: Publish model package
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-package-${{ github.run_number }}
+          path: |
+            model/model.joblib
+            model/metrics.json
+            src/predict.py
+            requirements.txt

@@ -1,32 +1,41 @@
-# MLOps Lab
-
-This project provides a minimal MLOps starter structure for training, validating, and predicting with a machine learning model.
-
-## Project structure
-
-- `src/data_loader.py` loads the data
-- `src/train.py` trains the model
-- `src/validate.py` validates model performance
-- `src/predict.py` generates predictions
-- `tests/test_app.py` checks the basic workflow
+# MLOps Lab — Wine Quality Classifier
 
 ## Setup
-
-```bash
-python -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-.venv\Scripts\activate     # Windows
 pip install -r requirements.txt
-```
+cd src && python train.py
+cd .. && pytest tests/
 
-## Example run
+## Dataset
+- Source: UCI Wine Quality (Red) — URL in data_loader.py
+- Target: `target` (1 if quality ≥ 7)
+- Features: 11 chemical properties
+- Task: Binary classification
 
-```bash
-python src/train.py
-python src/validate.py
-python src/predict.py
-```
+## Metric: F1-score
+Chosen because the target is imbalanced (~13% positive).
+Accuracy would be misleading (a majority-class dummy scores ~87%).
 
-## CI/CD
+## Margin: 0.10
+DummyClassifier F1 ≈ 0. A margin of 0.10 ensures the model
+captures real signal, not noise. Too low → broken model passes.
+Too high → good model fails unnecessarily.
 
-The GitHub Actions workflow in `.github/workflows/pipeline.yml` runs lint/test steps on pushes and pull requests.
+## Runs
+- Failure A (quality gate): <URL>
+- Failure B (app test): <URL>
+- Final success: <URL>
+- Artifact: `model-package-<run_number>`
+
+## Answers
+1. **Why F1?** Imbalanced classes; F1 balances precision/recall.
+2. **Why 0.10 margin?** See above — floor for meaningful signal.
+3. **Failure causes:** A = weak model below gate; B = predict.py
+   no longer rejected missing features, so test_missing_feature_rejected
+   failed. Both blocked the artifact upload step.
+4. **CI/CD demonstrated by:** workflow on push to main, automated
+   training/tests, gated artifact upload = continuous integration +
+   artifact delivery.
+5. **Maturity level: Level 1–2 (Manual/automated ML pipeline).**
+   We have automated training + tests + artifact publishing, but no
+   continuous training trigger, no model registry, no monitoring.
+   Next level requires automated retraining triggers and a registry.

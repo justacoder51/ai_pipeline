@@ -6,7 +6,7 @@ cd src && python train.py
 cd .. && pytest tests/
 
 ## Dataset
-- Source: UCI Wine Quality (Red) — URL in data_loader.py
+- Source: [UCI Wine Quality (Red) — URL in data_loader.py](https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv)
 - Target: `target` (1 if quality ≥ 7)
 - Features: 11 chemical properties
 - Task: Binary classification

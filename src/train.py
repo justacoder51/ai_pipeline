@@ -36,7 +36,7 @@ def main():
     candidate = Pipeline([
         ("scaler", StandardScaler()),
         ("clf", RandomForestClassifier(
-            n_estimators=200, max_depth=10,
+            n_estimators=10, max_depth=2,
             random_state=RANDOM_STATE, n_jobs=-1
         ))
     ])

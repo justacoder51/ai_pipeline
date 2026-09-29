@@ -27,7 +27,7 @@ Too high → good model fails unnecessarily.
 - Artifact: `model-package-<run_number>`
 
 ## Answers
-1. **Why F1?** Imbalanced classes; F1 balances precision/recall.
+1. **Why F1?** cause accuracy will not work since it most of the label is negative just predicting that will have good accuracy 
 2. **Why 0.10 margin?** See above — floor for meaningful signal.
 3. **Failure causes:** A = weak model below gate; B = predict.py
    no longer rejected missing features, so test_missing_feature_rejected

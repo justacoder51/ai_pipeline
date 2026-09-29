@@ -24,10 +24,6 @@ def predict(input_dict, model=None):
     if model is None:
         model = load_model()
 
-    missing = [c for c in REQUIRED_FEATURES if c not in input_dict]
-    if missing:
-        raise ValueError(f"Missing required features: {missing}")
-
     X = pd.DataFrame([input_dict])[REQUIRED_FEATURES]
     return int(model.predict(X)[0])
 

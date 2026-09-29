@@ -21,14 +21,16 @@ captures real signal, not noise. Too low → broken model passes.
 Too high → good model fails unnecessarily.
 
 ## Runs
-- Failure A (quality gate): <URL>
-- Failure B (app test): <URL>
+- Failure A (quality gate): <https://github.com/justacoder51/ai_pipeline/actions/runs/36421943920>
+- Failure B (app test): <https://github.com/justacoder51/ai_pipeline/actions/runs/36533725597>
 - Final success: <URL>
 - Artifact: `model-package-<run_number>`
 
 ## Answers
 1. **Why F1?** cause accuracy will not work since it most of the label is negative just predicting that will have good accuracy 
-2. **Why 0.10 margin?** See above — floor for meaningful signal.
+2. **Why 0.10 margin?** A margin of 0.10 ensures the model
+captures real signal, not noise. Too low → broken model passes.
+Too high → good model fails unnecessarily.
 3. **Failure causes:** A = weak model below gate; B = predict.py
    no longer rejected missing features, so test_missing_feature_rejected
    failed. Both blocked the artifact upload step.
